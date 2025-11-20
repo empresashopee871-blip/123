@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Envio de SMS Global</title>
+<style>
+    body { background:#111; color:#fff; font-family:Arial; padding:20px; }
+    button { background:#0f0; padding:12px; width:100%; border:none; border-radius:8px; margin-top:10px; font-size:18px; }
+    #numero { background:#222; padding:12px; border-radius:8px; font-size:20px; margin-bottom:15px; }
+</style>
+</head>
+<body>
+
+<h2>📱 Número Global Atual</h2>
+<div id="numero">Carregando...</div>
+<button onclick="usar()">Enviar SMS</button>
+
+<script>
+const mensagem = `Você Tem 8R$ De Bonus Para Resgatar Registre Agora
+https://www.2899bet333.com/?id=937667970`;
+
+async function carregar() {
+    let r = await fetch("/numero");
+    let j = await r.json();
+    document.getElementById("numero").innerText =
+        j.numero ? j.numero : "✔ TODOS NÚMEROS FORAM USADOS";
+}
+
+async function usar() {
+    let numero = document.getElementById("numero").innerText;
+
+    if (numero.startsWith("✔")) return;
+
+    window.location.href = `sms:${numero}?body=${encodeURIComponent(mensagem)}`;
+
+    await fetch("/consumir", { method: "POST" });
+
+    setTimeout(carregar, 2000);
+}
+
+carregar();
+</script>
+</body>
+</html>
